@@ -7,7 +7,7 @@ class StockDataController {
 
   getStockData = async (req, res) => {
     const { symbol } = req.body;
-    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=${process.env.STOCK_DATA_API}`;
+    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=${process.env.STOCK_DATA_API_KEY}`;
 
     try {
       const response = await fetch(url, {
