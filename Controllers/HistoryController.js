@@ -63,7 +63,7 @@ class HistoryController {
 
   deleteTransaction = async (req, res) => {
     try {
-      const { selectedTransactionId } = req.body;
+      const { selectedTransactionId } = req.params;
       const deleteTransaction = await this.model.destroy({
         where: { id: selectedTransactionId },
       });
@@ -72,42 +72,6 @@ class HistoryController {
       console.log(error.message);
     }
   };
-
-  // getUserGoal = async (req, res) => {
-  //   try {
-  //     const { userId } = req.params;
-  //     const condition = {
-  //       where: { user_id: userId },
-  //     };
-  //     const userGoal = await this.goalModel.findAll(condition);
-
-  //     return res.json(userGoal);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  // updateUserGoal = async (req, res) => {
-  //   try {
-  //     const { retirementAge, targetExpenses, estInflation } = req.body;
-  //     const { userId } = req.params;
-  //     const condition = {
-  //       where: { user_id: userId },
-  //     };
-  //     const updateGoal = await this.goalModel.update(
-  //       {
-  //         retirement_age: retirementAge,
-  //         target_expenses: targetExpenses,
-  //         est_inflation: estInflation,
-  //       },
-  //       condition
-  //     );
-  //     const userGoal = await this.goalModel.findAll(condition);
-  //     return res.json(userGoal);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
 }
 
 module.exports = HistoryController;
