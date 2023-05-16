@@ -8,7 +8,7 @@ const PORT = process.env.PORT;
 
 const db = require("./db/models/index");
 
-const { users, goals } = db;
+const { users, goals, budgetCategories, histories, balances } = db;
 // const BankingRouter = require("./Routers/bankingRouter");
 
 // const bankingRouter = new BankingRouter(express, axios).route();
@@ -18,12 +18,25 @@ app.use(express.urlencoded({ extended: false }));
 
 const StockDataController = require("./Controllers/StockDataController");
 const UserController = require("./Controllers/UserController");
+const BudgetController = require("./Controllers/BudgetController");
+const HistoryController = require("./Controllers/HistoryController");
+const BalanceController = require("./Controllers/BalanceController");
 
 const StockDataRouter = require("./Routers/StockDataRouter");
 const UserRouter = require("./Routers/UserRouter");
+const BudgetRouter = require("./Routers/BudgetRouter");
+const HistoryRouter = require("./Routers/HistoryRouter");
+const BalanceRouter = require("./Routers/BalanceRouter");
 
 const stockDataController = new StockDataController();
 const userController = new UserController(users, goals);
+const budgetController = new BudgetController(budgetCategories);
+const historyController = new HistoryController(
+  histories,
+  budgetCategories,
+  users
+);
+const balanceController = new BalanceController(balances);
 
 const checkJwt = auth({
   audience: process.env.DB_AUDIENCE,
@@ -35,9 +48,27 @@ const stockDataRouter = new StockDataRouter(
   express
 ).route();
 const userRouter = new UserRouter(userController, express, checkJwt).route();
+const budgetRouter = new BudgetRouter(
+  budgetController,
+  express,
+  checkJwt
+).route();
+const historyRouter = new HistoryRouter(
+  historyController,
+  express,
+  checkJwt
+).route();
+const balanceRouter = new BalanceRouter(
+  balanceController,
+  express,
+  checkJwt
+).route();
 
 app.use("/api/stockdata", stockDataRouter);
 app.use("/profile", userRouter);
+app.use("/budget", budgetRouter);
+app.use("/history", historyRouter);
+app.use("/balance", balanceRouter);
 
 app.listen(PORT, () => {
   console.log(`Application is listening to ${PORT}`);
