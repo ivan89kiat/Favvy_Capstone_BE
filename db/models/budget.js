@@ -2,9 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Budget extends Model {
-    static associate(models) {
-      this.belongsToMany(models.users, { through: models.budgetCategories });
-    }
+    static associate(models) {}
   }
   Budget.init(
     {
