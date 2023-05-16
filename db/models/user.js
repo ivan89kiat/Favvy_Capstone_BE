@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       // this.hasMany(models.stockDatas, { through: models.stockDatas });
-      // this.hasMany(models.goals);
+      // this.belongsTo(models.goals);
       // this.hasMany(models.budgets, { through: models.budgetCategories });
     }
   }

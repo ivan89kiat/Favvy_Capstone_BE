@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Goal extends Model {
     static associate(models) {
-      this.belongsTo(models.users, { as: "financial_goal" });
+      // this.hasMany(models.users);
     }
   }
   Goal.init(
@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      target_expenses: DataTypes.STRING,
       retirement_age: DataTypes.STRING,
       est_inflation: DataTypes.STRING,
     },

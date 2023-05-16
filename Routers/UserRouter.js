@@ -7,8 +7,10 @@ class UserRouter {
   route = () => {
     let router = this.express.Router();
 
-    router.post("/", this.controller.getOrCreate);
+    router.post("/", this.checkJwt, this.controller.getOrCreate);
     router.put("/", this.checkJwt, this.controller.editProfile);
+    router.get("/:userId", this.controller.getUserGoal);
+    router.put("/:userId", this.checkJwt, this.controller.updateUserGoal);
     return router;
   };
 }

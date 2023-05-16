@@ -1,6 +1,7 @@
 class UserController {
-  constructor(model) {
+  constructor(model, goalModel) {
     this.model = model;
+    this.goalModel = goalModel;
   }
 
   getOrCreate = async (req, res) => {
@@ -32,6 +33,42 @@ class UserController {
       );
       const profile = await this.model.findAll(condition);
       res.json(profile);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  getUserGoal = async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const condition = {
+        where: { user_id: userId },
+      };
+      const userGoal = await this.goalModel.findAll(condition);
+
+      return res.json(userGoal);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  updateUserGoal = async (req, res) => {
+    try {
+      const { retirementAge, targetExpenses, estInflation } = req.body;
+      const { userId } = req.params;
+      const condition = {
+        where: { user_id: userId },
+      };
+      const updateGoal = await this.goalModel.update(
+        {
+          retirement_age: retirementAge,
+          target_expenses: targetExpenses,
+          est_inflation: estInflation,
+        },
+        condition
+      );
+      const userGoal = await this.goalModel.findAll(condition);
+      return res.json(userGoal);
     } catch (e) {
       console.log(e);
     }

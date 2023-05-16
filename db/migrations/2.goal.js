@@ -16,6 +16,9 @@ module.exports = {
       retirement_age: {
         type: Sequelize.STRING,
       },
+      target_expenses: {
+        type: Sequelize.STRING,
+      },
       est_inflation: {
         type: Sequelize.STRING,
       },

@@ -8,7 +8,7 @@ const PORT = process.env.PORT;
 
 const db = require("./db/models/index");
 
-const { users } = db;
+const { users, goals } = db;
 // const BankingRouter = require("./Routers/bankingRouter");
 
 // const bankingRouter = new BankingRouter(express, axios).route();
@@ -23,7 +23,7 @@ const StockDataRouter = require("./Routers/StockDataRouter");
 const UserRouter = require("./Routers/UserRouter");
 
 const stockDataController = new StockDataController();
-const userController = new UserController(users);
+const userController = new UserController(users, goals);
 
 const checkJwt = auth({
   audience: process.env.DB_AUDIENCE,
