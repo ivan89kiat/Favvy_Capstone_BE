@@ -7,7 +7,7 @@ class StockDataController {
 
   getStockData = async (req, res) => {
     const { symbol } = req.body;
-    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=${process.env.STOCK_DATA_API_KEY}`;
+    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${process.env.STOCK_DATA_API_KEY}`;
 
     try {
       const response = await fetch(url, {
@@ -19,6 +19,16 @@ class StockDataController {
     } catch (error) {
       console.log("Error:", error);
       res.status(500).json({ error: "Internal server error" });
+    }
+  };
+
+  getAllStockData = async (req, res) => {
+    try {
+      const allData = await this.model.findAll();
+
+      res.json(allData);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 }

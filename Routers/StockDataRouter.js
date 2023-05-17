@@ -7,7 +7,7 @@ class StockDataRouter {
     let router = this.express.Router();
 
     router.get("/", this.controller.getStockData);
-
+    router.get("/all", this.controller.getAllStockData);
     return router;
   };
 }
