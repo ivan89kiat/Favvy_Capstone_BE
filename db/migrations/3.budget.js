@@ -16,12 +16,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       amount: {
-        type: Sequelize.DECIMAL,
-      },
-      spending: {
+        allowNull: true,
         type: Sequelize.DECIMAL,
       },
       balance: {
+        allowNull: true,
         type: Sequelize.DECIMAL,
       },
       createdAt: {

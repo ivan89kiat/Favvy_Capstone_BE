@@ -8,9 +8,13 @@ class BudgetRouter {
     let router = this.express.Router();
 
     router.get("/", this.controller.getBudgetCategories);
-
-    // router.put("/", this.checkJwt, this.controller.editProfile);
-    // router.put("/:userId", this.checkJwt, this.controller.updateUserGoal);
+    router.get("/:userId", this.controller.getUserBudgets);
+    router.post("/:userId", this.controller.createBudgets);
+    router.put("/:userId", this.controller.editBudgets);
+    router.delete(
+      "/:userId/:budgetId/:selectedCategory/:spending",
+      this.controller.deleteBudget
+    );
     return router;
   };
 }

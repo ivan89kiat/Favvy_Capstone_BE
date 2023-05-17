@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       amount: DataTypes.DECIMAL,
-      spending: DataTypes.DECIMAL,
       balance: DataTypes.DECIMAL,
     },
     {
