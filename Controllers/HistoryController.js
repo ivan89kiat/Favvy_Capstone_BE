@@ -1,6 +1,7 @@
 class HistoryController {
-  constructor(model) {
+  constructor(model, budgetModel) {
     this.model = model;
+    this.budgetModel = budgetModel;
   }
 
   getUserHistory = async (req, res) => {
@@ -19,8 +20,13 @@ class HistoryController {
 
   createTransaction = async (req, res) => {
     try {
-      const { editedTransactionAmount, selectedCategory, selectedType, date } =
-        req.body;
+      const {
+        editedTransactionAmount,
+        selectedCategory,
+        selectedType,
+        date,
+        selectedCategoryId,
+      } = req.body;
       const { userId } = req.params;
       const newTransaction = await this.model.create({
         user_id: userId,
@@ -29,6 +35,19 @@ class HistoryController {
         type: selectedType,
         date: date,
       });
+
+      const condition = {
+        where: { budgetCategory_id: selectedCategoryId, user_id: userId },
+        defaults: { amount: 0, balance: 0 },
+      };
+      const [findOrCreateBudget, created] = await this.budgetModel.findOrCreate(
+        condition
+      );
+      if (created) {
+        console.log("New budget created");
+      } else {
+        console.log("Budget already exists");
+      }
       return res.json(newTransaction);
     } catch (error) {
       console.log(error.message);

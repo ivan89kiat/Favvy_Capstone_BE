@@ -11,8 +11,6 @@ class HistoryRouter {
     router.post("/:userId", this.controller.createTransaction);
     router.put("/", this.controller.editTransaction);
     router.delete("/:selectedTransactionId", this.controller.deleteTransaction);
-
-    // router.put("/:userId", this.checkJwt, this.controller.updateUserGoal);
     return router;
   };
 }
