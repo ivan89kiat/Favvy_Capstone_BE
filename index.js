@@ -8,7 +8,16 @@ const PORT = process.env.PORT;
 
 const db = require("./db/models/index");
 
-const { users, goals, budgetCategories, histories, balances } = db;
+const {
+  users,
+  goals,
+  budgetCategories,
+  histories,
+  balances,
+  budgets,
+  portfolios,
+  stockDatas,
+} = db;
 // const BankingRouter = require("./Routers/bankingRouter");
 
 // const bankingRouter = new BankingRouter(express, axios).route();
@@ -21,22 +30,30 @@ const UserController = require("./Controllers/UserController");
 const BudgetController = require("./Controllers/BudgetController");
 const HistoryController = require("./Controllers/HistoryController");
 const BalanceController = require("./Controllers/BalanceController");
+const PortfolioController = require("./Controllers/PortfolioController");
 
 const StockDataRouter = require("./Routers/StockDataRouter");
 const UserRouter = require("./Routers/UserRouter");
 const BudgetRouter = require("./Routers/BudgetRouter");
 const HistoryRouter = require("./Routers/HistoryRouter");
 const BalanceRouter = require("./Routers/BalanceRouter");
+const PortfolioRouter = require("./Routers/PortfolioRouter");
 
-const stockDataController = new StockDataController();
+const stockDataController = new StockDataController(stockDatas);
 const userController = new UserController(users, goals);
-const budgetController = new BudgetController(budgetCategories);
-const historyController = new HistoryController(
-  histories,
+const budgetController = new BudgetController(
+  budgets,
   budgetCategories,
-  users
+  histories,
+  balances
 );
+const historyController = new HistoryController(histories, budgets);
 const balanceController = new BalanceController(balances);
+const portfolioController = new PortfolioController(
+  portfolios,
+  stockDatas,
+  balances
+);
 
 const checkJwt = auth({
   audience: process.env.DB_AUDIENCE,
@@ -63,12 +80,18 @@ const balanceRouter = new BalanceRouter(
   express,
   checkJwt
 ).route();
+const portfolioRouter = new PortfolioRouter(
+  portfolioController,
+  express,
+  checkJwt
+).route();
 
 app.use("/api/stockdata", stockDataRouter);
 app.use("/profile", userRouter);
 app.use("/budget", budgetRouter);
 app.use("/history", historyRouter);
 app.use("/balance", balanceRouter);
+app.use("/investment", portfolioRouter);
 
 app.listen(PORT, () => {
   console.log(`Application is listening to ${PORT}`);
