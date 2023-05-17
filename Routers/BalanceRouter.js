@@ -9,7 +9,6 @@ class BalanceRouter {
 
     router.get("/:userId", this.controller.getUserBalance);
     router.put("/:userId", this.controller.updateUserBalance);
-    // router.put("/:userId", this.checkJwt, this.controller.updateUserGoal);
     return router;
   };
 }
