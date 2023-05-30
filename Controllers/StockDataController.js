@@ -1,21 +1,34 @@
 require("dotenv").config();
-const fetch = require("node-fetch");
+const axios = require("axios");
 class StockDataController {
   constructor(model) {
     this.model = model;
   }
 
   getStockData = async (req, res) => {
-    const { symbol } = req.body;
-    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${process.env.STOCK_DATA_API_KEY}`;
-
     try {
-      const response = await fetch(url, {
-        headers: { "User-Agent": "request" },
-      });
-      const data = await response.json();
-      console.log(data);
-      res.status(200).json(data);
+      const { symbol } = req.params;
+      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=${process.env.STOCK_DATA_API_KEY}`;
+
+      const response = await axios.get(url);
+
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate() - 5).padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
+      const stockupdate = response.data["Time Series (Daily)"][formattedDate];
+
+      const updatedStock = await this.model.update(
+        {
+          date: formattedDate,
+          open: stockupdate["1. open"],
+          close: stockupdate["4. close"],
+        },
+        { where: { symbol: symbol } }
+      );
+      console.log("stockDatas updated successfully");
     } catch (error) {
       console.log("Error:", error);
       res.status(500).json({ error: "Internal server error" });

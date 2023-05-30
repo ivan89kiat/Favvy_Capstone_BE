@@ -33,28 +33,32 @@ class PortfolioController {
       };
       const stockdata = this.stockDatasModel.findOrCreate(condition);
 
-      const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${selectedCompany}&apikey=${process.env.STOCK_DATA_API_KEY}`;
+      const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${selectedCompany}&apikey=${process.env.STOCK_DATA_API_KEY}`;
 
       const response = await axios.get(url);
-      const stockupdate = response.data;
-      const newDate = new Date(
-        stockupdate["Global Quote"]["07. latest trading day"]
-      ).toLocaleDateString();
+
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate() - 5).padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
+      const stockupdate = response.data["Time Series (Daily)"][formattedDate];
 
       const createdStockData = await this.stockDatasModel.findAll({
         where: { symbol: selectedCompany },
       });
-
+      console.log(createdStockData[0].id);
       const updatedStock = await this.stockDatasModel.update(
         {
-          date: newDate,
-          open: stockupdate["Global Quote"]["02. open"],
-          close: stockupdate["Global Quote"]["05. price"],
+          date: formattedDate,
+          open: stockupdate["1. open"],
+          close: stockupdate["4. close"],
         },
         { where: { symbol: selectedCompany } }
       );
 
-      const userPortfolio = await this.model.findOrCreate({
+      const userPortfolio = await this.model.create({
         user_id: userId,
         stockData_id: createdStockData[0].id,
       });
